@@ -3,7 +3,7 @@
    	xmlns:zope="http://namespaces.zope.org/zope"
    	xmlns:gallery="http://namespaces.zope.org/gallery"
     xmlns:zcml="http://namespaces.zope.org/zcml"
-    i18n_domain="collective.ptg.picasa">
+    i18n_domain="collective.plonetruegallery">
 
     <gallery:type
         factory=".PicasaAdapter"
