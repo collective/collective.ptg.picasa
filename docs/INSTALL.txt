@@ -1,0 +1,10 @@
+collective.ptg.picasa
+========================================
+
+Add ``collective.ptg.picasa`` to the list of eggs to install, e.g.::
+
+   [buildout]
+   ...
+   eggs =
+       ...
+       collective.ptg.picasa
