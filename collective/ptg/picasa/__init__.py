@@ -37,6 +37,45 @@ DATA_FEED_URL = '/data/feed/api/user/%s/album' + \
                 '/%s?kind=photo&imgmax=%s&thumbsize=%sc'
 
 
+class IPicasaGallerySettings(IBaseSettings):
+    picasa_username = schema.TextLine(
+        title=_(u"label_picasa_username", default=u"GMail address"),
+        description=_(u"description_picasa_username",
+            default=u"GMail address of who this album belongs to. "
+                    u"(*Picasa* gallery type)"
+        ),
+        required=False)
+    picasa_album = schema.TextLine(
+        title=_(u"label_picasa_album", default=u"Picasa Album"),
+        description=_(u"description_picasa_album",
+            default=u"Name of your picasa web album. "
+                    u"This will be the qualified name you'll see in "
+                    u"the address bar or the full length name of the "
+                    u"album. (*Picasa* gallery type)"
+        ),
+        required=False)
+
+
+
+
+
+class IPicasaAdapter(IGalleryAdapter):
+    """
+    """
+
+    gd_client = Attribute("property for gd_client instance")
+
+    def get_album_name(name, user):
+        """
+        Returns the selected album name and user.
+        Uses name and user in settings if not specified.
+        """
+
+    def feed():
+        """
+        Returns the picasa feed for the given album.
+        """
+
 class PicasaAdapter(BaseAdapter):
     implements(IPicasaAdapter, IGalleryAdapter)
 
@@ -132,23 +171,10 @@ class PicasaAdapter(BaseAdapter):
             return []
 
 
-class IPicasaGallerySettings(IBaseSettings):
-    picasa_username = schema.TextLine(
-        title=_(u"label_picasa_username", default=u"GMail address"),
-        description=_(u"description_picasa_username",
-            default=u"GMail address of who this album belongs to. "
-                    u"(*Picasa* gallery type)"
-        ),
-        required=False)
-    picasa_album = schema.TextLine(
-        title=_(u"label_picasa_album", default=u"Picasa Album"),
-        description=_(u"description_picasa_album",
-            default=u"Name of your picasa web album. "
-                    u"This will be the qualified name you'll see in "
-                    u"the address bar or the full length name of the "
-                    u"album. (*Picasa* gallery type)"
-        ),
-        required=False)
+
+
+
+
 
 class PicasaUsernameValidator(validator.SimpleFieldValidator):
 
