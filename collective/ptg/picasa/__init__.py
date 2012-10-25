@@ -5,6 +5,10 @@ import zope.component
 from zope.interface import Interface, Attribute
 from collective.plonetruegallery.interfaces import \
     IGalleryAdapter, IBaseSettings
+from collective.plonetruegallery.validators import \
+    Data
+from collective.plonetruegallery.utils import getGalleryAdapter
+
 #dont know if next line is needed
 from zope.interface import implements
 from collective.plonetruegallery.galleryadapters.base import BaseAdapter
@@ -13,9 +17,6 @@ from zope import schema
 from zope.i18nmessageid import MessageFactory
 
 _ = MessageFactory('collective.ptg.picasa')
-
-
-
 
 try:
     import gdata.photos.service
@@ -36,6 +37,8 @@ GDATA = {}
 DATA_FEED_URL = '/data/feed/api/user/%s/album' + \
                 '/%s?kind=photo&imgmax=%s&thumbsize=%sc'
 
+def empty(v):
+    return v is None or len(v.strip()) == 0
 
 class IPicasaGallerySettings(IBaseSettings):
     picasa_username = schema.TextLine(
@@ -54,9 +57,6 @@ class IPicasaGallerySettings(IBaseSettings):
                     u"album. (*Picasa* gallery type)"
         ),
         required=False)
-
-
-
 
 
 class IPicasaAdapter(IGalleryAdapter):
@@ -169,12 +169,6 @@ class PicasaAdapter(BaseAdapter):
         except Exception, inst:
             self.log_error(Exception, inst, "Error getting all images")
             return []
-
-
-
-
-
-
 
 class PicasaUsernameValidator(validator.SimpleFieldValidator):
 
