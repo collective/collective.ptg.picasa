@@ -29,7 +29,7 @@ setup(name='collective.ptg.picasa',
       zip_safe=False,
       install_requires=[
           'setuptools',
-          'picasaapi',
+          'gdata',
           'plone.app.z3cform',
           'collective.plonetruegallery'
       ],
