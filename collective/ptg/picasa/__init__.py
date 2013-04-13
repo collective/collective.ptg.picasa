@@ -117,12 +117,19 @@ class PicasaAdapter(BaseAdapter):
     gd_client = property(get_gd_client, set_gd_client)
 
     def assemble_image_information(self, image):
+        img_url = image.content.src
         return {
-            'image_url': image.content.src,
+            'image_url': img_url,
             'thumb_url': image.media.thumbnail[0].url,
             'link': image.content.src,
             'title': image.title.text,
-            'description': image.summary.text or ''
+            'description': image.summary.text or '',
+            'original_image_url': img_url,
+            'download_url': img_url,
+            'copyright': '',
+            'portal_type': '_picasa',
+            'keywords': '', 
+            'bodytext': ''
         }
 
     def get_album_name(self, name=None, user=None):
