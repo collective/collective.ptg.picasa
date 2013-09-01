@@ -1,8 +1,8 @@
-from z3c.form import validator, error
+from z3c.form import validator
 import zope.interface
 import zope.component
 
-from zope.interface import Interface, Attribute
+from zope.interface import Attribute
 from collective.plonetruegallery.interfaces import \
     IGalleryAdapter, IBaseSettings
 from collective.plonetruegallery.validators import \
@@ -37,20 +37,23 @@ GDATA = {}
 DATA_FEED_URL = '/data/feed/api/user/%s/album' + \
                 '/%s?kind=photo&imgmax=%s&thumbsize=%sc'
 
+
 def empty(v):
     return v is None or len(v.strip()) == 0
+
 
 class IPicasaGallerySettings(IBaseSettings):
     picasa_username = schema.TextLine(
         title=_(u"label_picasa_username", default=u"GMail address"),
-        description=_(u"description_picasa_username",
+        description=_(
+            u"description_picasa_username",
             default=u"GMail address of who this album belongs to. "
-                    u"(*Picasa* gallery type)"
-        ),
+                    u"(*Picasa* gallery type)"),
         required=False)
     picasa_album = schema.TextLine(
         title=_(u"label_picasa_album", default=u"Picasa Album"),
-        description=_(u"description_picasa_album",
+        description=_(
+            u"description_picasa_album",
             default=u"Name of your picasa web album. "
                     u"This will be the qualified name you'll see in "
                     u"the address bar or the full length name of the "
@@ -76,12 +79,14 @@ class IPicasaAdapter(IGalleryAdapter):
         Returns the picasa feed for the given album.
         """
 
+
 class PicasaAdapter(BaseAdapter):
     implements(IPicasaAdapter, IGalleryAdapter)
 
     schema = IPicasaGallerySettings
     name = u"picasa"
-    description = _(u"label_picasa_gallery_type",
+    description = _(
+        u"label_picasa_gallery_type",
         default=u"Picasa Web Albums")
 
     sizes = {
@@ -128,7 +133,7 @@ class PicasaAdapter(BaseAdapter):
             'download_url': img_url,
             'copyright': '',
             'portal_type': '_picasa',
-            'keywords': '', 
+            'keywords': '',
             'bodytext': ''
         }
 
@@ -144,7 +149,7 @@ class PicasaAdapter(BaseAdapter):
         feed = self.gd_client.GetUserFeed(user=user)
         for entry in feed.entry:
             if entry.name.text.decode("utf-8") == name or \
-                entry.title.text.decode("utf-8") == name:
+                    entry.title.text.decode("utf-8") == name:
                 return entry.name.text
 
         return None
@@ -163,7 +168,8 @@ class PicasaAdapter(BaseAdapter):
             return feed
         except GooglePhotosException, inst:
             #Do not show anything if connection failed
-            self.log_error(GooglePhotosException, inst,
+            self.log_error(
+                GooglePhotosException, inst,
                 "Error getting photo feed")
             return None
 
@@ -171,11 +177,12 @@ class PicasaAdapter(BaseAdapter):
         try:
             picasaGallery = self.feed()
             images = [self.assemble_image_information(i)
-                for i in picasaGallery.entry]
+                      for i in picasaGallery.entry]
             return images
         except Exception, inst:
             self.log_error(Exception, inst, "Error getting all images")
             return []
+
 
 class PicasaUsernameValidator(validator.SimpleFieldValidator):
 
@@ -187,10 +194,13 @@ class PicasaUsernameValidator(validator.SimpleFieldValidator):
         if empty(username):
             raise zope.schema.ValidationError(
                 _(u"label_validate_picasa_specify_username",
-                default=u"You must specify a picasa username."),
+                  default=u"You must specify a picasa username."),
                 True
             )
-validator.WidgetValidatorDiscriminators(PicasaUsernameValidator,
+
+
+validator.WidgetValidatorDiscriminators(
+    PicasaUsernameValidator,
     field=IPicasaGallerySettings['picasa_username'])
 zope.component.provideAdapter(PicasaUsernameValidator)
 
@@ -206,8 +216,8 @@ class PicasaAlbumValidator(validator.SimpleFieldValidator):
         username = settings.picasa_username
 
         if empty(album):
-            raise zope.schema.ValidationError(
-                _(u"label_validate_picasa_ablum_empty",
+            raise zope.schema.ValidationError(_(
+                u"label_validate_picasa_ablum_empty",
                 default=u"You must specify a picasa album."),
                 True
             )
@@ -219,14 +229,14 @@ class PicasaAlbumValidator(validator.SimpleFieldValidator):
         found = adapter.get_album_name(name=album, user=username)
 
         if found is None:
-            raise zope.schema.ValidationError(
-                _(u"label_validate_picasa_find_album",
+            raise zope.schema.ValidationError(_(
+                u"label_validate_picasa_find_album",
                 default=u"Could not find album."),
                 True
             )
-validator.WidgetValidatorDiscriminators(PicasaAlbumValidator,
+
+
+validator.WidgetValidatorDiscriminators(
+    PicasaAlbumValidator,
     field=IPicasaGallerySettings['picasa_album'])
 zope.component.provideAdapter(PicasaAlbumValidator)
-
-            
-            

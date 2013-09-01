@@ -5,10 +5,12 @@
     xmlns:zcml="http://namespaces.zope.org/zcml"
     i18n_domain="collective.plonetruegallery">
 
+    <include package="collective.plonetruegallery.meta" />
+
     <gallery:type
         factory=".PicasaAdapter"
         provides="collective.ptg.picasa.IPicasaAdapter"
-		condition=".add_condition"
+        condition=".add_condition"
     />
 
 </configure>
